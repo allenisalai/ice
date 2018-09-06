@@ -15,9 +15,13 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"github.com/allenisalai/ice/internal"
+	"github.com/allenisalai/ice/internal/repository"
+	"os/exec"
+	"fmt"
+	"path/filepath"
+	"os"
 )
 
 // installCmd represents the install command
@@ -31,7 +35,24 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("install called")
+		c := *ice.GetConfig()
+		rep := repository.Factory(c)
+
+		for _, r := range rep.GetRepositories() {
+			if r.Name == args[0] {
+				fmt.Printf("Git install from: %s\n", r.SshUrl)
+				cmd := exec.Command("git", "clone", r.SshUrl, filepath.Join(c.CodeDir, r.Name))
+				cmd.Stdout = os.Stdout
+				cmd.Stdout = os.Stderr
+				cmd.Run()
+				fmt.Printf("%s repository installed successfully\n", r.Name)
+				// run make install
+				cmd = exec.Command("rm", "-rf", filepath.Join(c.CodeDir, r.Name))
+				cmd.Run()
+				fmt.Printf("%s removed\n", filepath.Join(c.CodeDir, r.Name))
+			}
+		}
+
 	},
 }
 

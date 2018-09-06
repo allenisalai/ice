@@ -7,8 +7,10 @@ type RepositoryInterface interface {
 }
 
 type Repository struct {
-	Name string
-	Url  string
+	Name string  `json:"name"`
+	Description string `json:"description"`
+	Url string `json:"url"`
+	SshUrl string `json:"sshUrl"`
 }
 
 func Factory(config ice.Configuration) RepositoryInterface {
