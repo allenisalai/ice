@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"io/ioutil"
+	"github.com/mitchellh/go-homedir"
 )
 
 type Configuration struct {
@@ -14,8 +15,8 @@ type Configuration struct {
 	ApiToken           string
 }
 
-const CONFIG_FILE_NAME string = "config.json"
-const ICE_FOLDER string = ".ice"
+const CONFIG_FILE_NAME = "config.json"
+const ICE_FOLDER = ".ice"
 
 var appConfig *Configuration
 
@@ -40,14 +41,23 @@ func GetConfig() *Configuration {
 	return appConfig
 }
 
-func getConfigFileLocation() string {
-	homeDir := os.Getenv("HOME")
+func getUserHomeDir() string {
+	homeDir, err := homedir.Dir()
+	if err != nil {
+		panic(err.Error())
+		os.Exit(1)
+	}
 
-	return filepath.Join(homeDir, ICE_FOLDER, CONFIG_FILE_NAME)
+	return homeDir
+}
+
+func getConfigFileLocation() string {
+
+	return filepath.Join(getUserHomeDir(), ICE_FOLDER, CONFIG_FILE_NAME)
 }
 
 func newConfiguration() *Configuration {
-	homeDir := os.Getenv("HOME")
+	homeDir := getUserHomeDir()
 
 	return &Configuration{
 		LogFile:        filepath.Join(homeDir, ICE_FOLDER, "log"),

@@ -16,6 +16,8 @@ var infoCmd = &cobra.Command{
 
 		fmt.Println(fmt.Sprintf("Log File: %s", c.LogFile))
 		fmt.Println(fmt.Sprintf("Code Directory: %s", c.CodeDir))
+
+		// list of installed packages
 	},
 }
 

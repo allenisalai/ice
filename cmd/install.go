@@ -27,25 +27,25 @@ import (
 // installCmd represents the install command
 var installCmd = &cobra.Command{
 	Use:   "install",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Install a new service",
+	Long: `Install a repository from any configured repository source.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		c := *ice.GetConfig()
 		rep := repository.Factory(c)
 
+		repoFound := false
 		for _, r := range rep.GetRepositories() {
 			if r.Name == args[0] {
-				fmt.Printf("Git install from: %s\n", r.SshUrl)
+				repoFound = true
+				fmt.Printf("1) Git install from: %s\n", r.SshUrl)
 				cmd := exec.Command("git", "clone", r.SshUrl, filepath.Join(c.CodeDir, r.Name))
 				cmd.Stdout = os.Stdout
-				cmd.Stdout = os.Stderr
-				cmd.Run()
-				fmt.Printf("%s repository installed successfully\n", r.Name)
+				cmd.Stderr = os.Stderr
+				err := cmd.Run()
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+				fmt.Printf("2) %s repository cloned successfully\n", r.Name)
 				// run make install
 				cmd = exec.Command("rm", "-rf", filepath.Join(c.CodeDir, r.Name))
 				cmd.Run()
@@ -53,6 +53,9 @@ to quickly create a Cobra application.`,
 			}
 		}
 
+		if !repoFound {
+			fmt.Printf("Unable to find repository: %s \n", args[0])
+		}
 	},
 }
 
