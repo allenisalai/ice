@@ -12,5 +12,5 @@
 *.out
 
 /.idea/
-
+/vendor/
 ice_cmd

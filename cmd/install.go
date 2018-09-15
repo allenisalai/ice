@@ -15,60 +15,75 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/allenisalai/ice/internal"
-	"github.com/allenisalai/ice/internal/repository"
-	"os/exec"
 	"fmt"
-	"path/filepath"
+	"github.com/allenisalai/ice/internal"
+	"github.com/allenisalai/ice/internal/logger"
+	"github.com/allenisalai/ice/internal/repository"
+	"github.com/spf13/cobra"
+	"log"
 	"os"
+	"os/exec"
+	"path/filepath"
 )
 
 // installCmd represents the install command
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Install a new service",
-	Long: `Install a repository from any configured repository source.`,
+	Long:  `Install a repository from any configured repository source.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		c := *ice.GetConfig()
 		rep := repository.Factory(c)
 
 		repoFound := false
-		for _, r := range rep.GetRepositories() {
+		repos, err := rep.GetRepositories()
+
+		if err != nil {
+			log.Fatalf("Failed to retrieve repositories: %s", err.Error())
+		}
+
+		for _, r := range repos {
 			if r.Name == args[0] {
 				repoFound = true
-				fmt.Printf("1) Git install from: %s\n", r.SshUrl)
-				cmd := exec.Command("git", "clone", r.SshUrl, filepath.Join(c.CodeDir, r.Name))
-				cmd.Stdout = os.Stdout
-				cmd.Stderr = os.Stderr
-				err := cmd.Run()
-				if err != nil {
-					fmt.Println(err.Error())
-				}
-				fmt.Printf("2) %s repository cloned successfully\n", r.Name)
-				// run make install
-				cmd = exec.Command("rm", "-rf", filepath.Join(c.CodeDir, r.Name))
-				cmd.Run()
-				fmt.Printf("%s removed\n", filepath.Join(c.CodeDir, r.Name))
+				repoFolder := filepath.Join(c.CodeDir, r.Name)
+
+				cloneGitRepo(r, repoFolder)
+				runRepoInstallCommand(repoFolder)
 			}
 		}
 
 		if !repoFound {
-			fmt.Printf("Unable to find repository: %s \n", args[0])
+			log.Printf("Unable to find repository: '%s'\n", args[0])
 		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(installCmd)
+}
 
-	// Here you will define your flags and configuration settings.
+func cloneGitRepo(r repository.Repository, repoFolder string) {
+	fmt.Printf("1) Git install from: %s\n", r.SshUrl)
+	if _, err := os.Stat(repoFolder); os.IsNotExist(err) {
+		cmd := exec.Command("git", "clone", r.SshUrl, repoFolder)
+		out, err := cmd.CombinedOutput()
+		logger.Println(string(out))
+		if err != nil {
+			logger.Fatalf("Git clone failed: %s", err.Error())
+		}
+		log.Printf("'%s' repository cloned successfully\n", r.Name)
+	} else {
+		log.Printf("Repository direcory already exists: %s", repoFolder)
+	}
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// installCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// installCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func runRepoInstallCommand(repoFolder string) {
+	log.Printf("Running repo install commands\n")
+	cmd := exec.Command("make", "install")
+	cmd.Dir = repoFolder
+	out, err := cmd.CombinedOutput()
+	logger.Println(string(out))
+	if err != nil {
+		log.Fatalf("Repo install failed: %s\n", err.Error())
+	}
 }

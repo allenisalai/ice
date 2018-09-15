@@ -3,14 +3,14 @@ package repository
 import "github.com/allenisalai/ice/internal"
 
 type RepositoryInterface interface {
-	GetRepositories() []Repository
+	GetRepositories() ([]Repository, error)
 }
 
 type Repository struct {
-	Name string  `json:"name"`
+	Name        string `json:"name"`
 	Description string `json:"description"`
-	Url string `json:"url"`
-	SshUrl string `json:"sshUrl"`
+	Url         string `json:"url"`
+	SshUrl      string `json:"sshUrl"`
 }
 
 func Factory(config ice.Configuration) RepositoryInterface {
@@ -21,4 +21,3 @@ func Factory(config ice.Configuration) RepositoryInterface {
 
 	panic("Invalid Repository Provider")
 }
-

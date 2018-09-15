@@ -2,10 +2,11 @@ package ice
 
 import (
 	"encoding/json"
+	"github.com/mitchellh/go-homedir"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
-	"io/ioutil"
-	"github.com/mitchellh/go-homedir"
 )
 
 type Configuration struct {
@@ -32,8 +33,7 @@ func InitializeAppConfigs() {
 	err := appConfig.readFromFile(getConfigFileLocation())
 
 	if err != nil {
-		panic(err.Error())
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 }
 
@@ -44,8 +44,7 @@ func GetConfig() *Configuration {
 func getUserHomeDir() string {
 	homeDir, err := homedir.Dir()
 	if err != nil {
-		panic(err.Error())
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 
 	return homeDir
@@ -60,8 +59,8 @@ func newConfiguration() *Configuration {
 	homeDir := getUserHomeDir()
 
 	return &Configuration{
-		LogFile:        filepath.Join(homeDir, ICE_FOLDER, "log"),
-		CodeDir:        filepath.Join(homeDir, ICE_FOLDER, "code"),
+		LogFile:            filepath.Join(homeDir, ICE_FOLDER, "logger"),
+		CodeDir:            filepath.Join(homeDir, ICE_FOLDER, "code"),
 		RepositoryProvider: "github4",
 	}
 }
@@ -98,19 +97,16 @@ func createDefaultConfigFile(defaults *Configuration) {
 	if err != nil && os.IsNotExist(err) {
 		os.Mkdir(path, 0755)
 	} else if err != nil && !os.IsNotExist(err) {
-		panic(err.Error())
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 
 	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
-		panic(err.Error())
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 
 	if err := defaults.writeToFile(fileName); err != nil {
-		panic(err.Error())
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 
 	file.Close()

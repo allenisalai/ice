@@ -1,8 +1,8 @@
 package ice
 
 import (
-	"testing"
 	"os"
+	"testing"
 )
 
 func TestGetConfigFileLocation(t *testing.T) {
@@ -22,4 +22,3 @@ func TestGetConfigFileLocation(t *testing.T) {
 		t.Error("Configuration file didn't match expected filename")
 	}
 }
-

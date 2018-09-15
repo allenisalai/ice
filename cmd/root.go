@@ -4,10 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"github.com/allenisalai/ice/internal"
 )
 
 var cfgFile string
@@ -41,11 +38,12 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	//cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.ice"+ice.CONFIG_FILE_NAME+")")
+	//rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "Config file (default is $HOME/.ice"+ice.CONFIG_FILE_NAME+")")
 }
 
+/*
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
@@ -71,3 +69,4 @@ func initConfig() {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
 }
+*/

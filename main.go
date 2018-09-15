@@ -2,12 +2,13 @@ package main
 
 import (
 	"github.com/allenisalai/ice/cmd"
-	_ "github.com/allenisalai/ice/internal"
 	"github.com/allenisalai/ice/internal"
+	"github.com/allenisalai/ice/internal/logger"
 )
 
 func main() {
 	ice.InitializeAppConfigs()
+	logger.SetUpLogger(ice.GetConfig().LogFile, true)
 
 	cmd.Execute()
 }
