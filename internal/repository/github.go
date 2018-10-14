@@ -122,7 +122,7 @@ func (r Github) queryGithubV4Repositories(query string, pageSize int, lastCursor
 }
 
 func (ghr GithubV4Response) getRepositories() []Repository {
-	repos := []Repository{}
+	var repos []Repository
 	for _, e := range ghr.Data.Organization.Repositories.Edges {
 		repos = append(repos, e.Node)
 	}

@@ -16,7 +16,7 @@ func TestGetConfigFileLocation(t *testing.T) {
 
 	expectedDir := expectedHomeDir + "/.ice/config.json"
 
-	loc := getConfigFileLocation()
+	loc := GetConfigFileLocation()
 
 	if loc != expectedDir {
 		t.Error("Configuration file didn't match expected filename")

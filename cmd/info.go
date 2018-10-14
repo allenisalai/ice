@@ -15,8 +15,9 @@ var infoCmd = &cobra.Command{
 	Long:  `View configuration and installed services`,
 	Run: func(cmd *cobra.Command, args []string) {
 		c := ice.GetConfig()
-		log.Println(fmt.Sprintf("Log File: %s", c.LogFile))
 		log.Println(fmt.Sprintf("Code Directory: %s", c.CodeDir))
+		log.Println(fmt.Sprintf("Log File: %s", c.LogFile))
+		log.Println(fmt.Sprintf("Config File: %s", ice.GetConfigFileLocation()))
 
 		missingReqs := getMissingRequirements()
 

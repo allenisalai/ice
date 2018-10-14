@@ -30,7 +30,7 @@ func InitializeAppConfigs() {
 	appConfig = newConfiguration()
 	createDefaultConfigFile(appConfig)
 
-	err := appConfig.readFromFile(getConfigFileLocation())
+	err := appConfig.readFromFile(GetConfigFileLocation())
 
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -50,8 +50,7 @@ func getUserHomeDir() string {
 	return homeDir
 }
 
-func getConfigFileLocation() string {
-
+func GetConfigFileLocation() string {
 	return filepath.Join(getUserHomeDir(), ICE_FOLDER, CONFIG_FILE_NAME)
 }
 
@@ -85,7 +84,7 @@ func (c *Configuration) writeToFile(fileName string) error {
 
 // createDefaultConfigFile creates a new
 func createDefaultConfigFile(defaults *Configuration) {
-	fileName := getConfigFileLocation()
+	fileName := GetConfigFileLocation()
 	// return if the file exists
 	_, err := os.Stat(fileName)
 	if err == nil {

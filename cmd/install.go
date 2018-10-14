@@ -15,7 +15,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/allenisalai/ice/internal"
 	"github.com/allenisalai/ice/internal/logger"
 	"github.com/allenisalai/ice/internal/repository"
@@ -37,7 +36,6 @@ var installCmd = &cobra.Command{
 
 		repoFound := false
 		repos, err := rep.GetRepositories()
-
 		if err != nil {
 			log.Fatalf("Failed to retrieve repositories: %s", err.Error())
 		}
@@ -48,7 +46,13 @@ var installCmd = &cobra.Command{
 				repoFolder := filepath.Join(c.CodeDir, r.Name)
 
 				cloneGitRepo(r, repoFolder)
-				runRepoInstallCommand(repoFolder)
+
+				is := ice.InstalledService{
+					Name: r.Name,
+					Dir:  repoFolder,
+				}
+
+				runRepoInstallCommand(is)
 			}
 		}
 
@@ -63,7 +67,7 @@ func init() {
 }
 
 func cloneGitRepo(r repository.Repository, repoFolder string) {
-	fmt.Printf("1) Git install from: %s\n", r.SshUrl)
+	log.Printf("1) Git install from: %s\n", r.SshUrl)
 	if _, err := os.Stat(repoFolder); os.IsNotExist(err) {
 		cmd := exec.Command("git", "clone", r.SshUrl, repoFolder)
 		out, err := cmd.CombinedOutput()
@@ -77,13 +81,13 @@ func cloneGitRepo(r repository.Repository, repoFolder string) {
 	}
 }
 
-func runRepoInstallCommand(repoFolder string) {
+func runRepoInstallCommand(is ice.InstalledService) {
 	log.Printf("Running repo install commands\n")
-	cmd := exec.Command("make", "install")
-	cmd.Dir = repoFolder
+	cmd := is.Cmd("install")
+	cmd.Dir = is.Dir
 	out, err := cmd.CombinedOutput()
-	logger.Println(string(out))
 	if err != nil {
-		log.Fatalf("Repo install failed: %s\n", err.Error())
+		log.Fatalf("Repo install failed: %s\n", string(out))
 	}
+	log.Printf("Repo install command, complete\n")
 }

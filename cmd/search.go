@@ -12,12 +12,13 @@ import (
 
 // listCmd represents the list command
 var includeDescription = false
+
 const ARG_SEARCH_TERM = 0
 
 var searchCmd = &cobra.Command{
 	Use:   "search",
 	Short: "Search for repositories by name",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		c := *ice.GetConfig()
 		rep := repository.Factory(c)
@@ -34,7 +35,7 @@ var searchCmd = &cobra.Command{
 		var tableData [][]string
 		for _, r := range repos {
 
-			if searchTerm == "" || !strings.Contains(r.Name, searchTerm) {
+			if searchTerm != "" && !strings.Contains(r.Name, searchTerm) {
 				continue
 			}
 
