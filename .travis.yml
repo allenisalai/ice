@@ -31,7 +31,7 @@ deploy:
   - ice .linux.amd64
   on:
     # What to repository to build
-    repo: username/reponame
+    repo: allenisalai/ice
     # Only build binaries for tagged commits
     tags: true
     condition: $LATEST = true
