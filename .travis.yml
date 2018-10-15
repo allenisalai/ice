@@ -17,7 +17,7 @@ script:
   - go get -t -v ./...
   - go test -v -race ./...
   # Only build binaries from the latest Go release.
-  - if [ "${LATEST}" = "true" ]; then gox -os="linux darwin windows" -arch="amd64" -output="ice.." -verbose ./...; fi
+  - if [ "${LATEST}" = "true" ]; then gox -os="linux darwin" -arch="amd64" -output="ice.." -verbose ./...; fi
 
 
 deploy:
@@ -27,7 +27,6 @@ deploy:
     secure: ap1G/h8Nwz3aOwoQvxIdNu0qxIJQpYxIUsO4GO6VLZCPT724E9yBQ32BTdud5WUz5NUBPNT7RJktl/K0FHoDw1QUl4+L4wUpN+WNuCrBVMBJpe5ppu8qVC46zABam34TZtqtu/6qsHsBAVu0P+NFEi7uN/znBRIfMLoC4pjttDefPk17gznF/T1FYpCq4S5/C+cmyglMOaZqTQ9liNw/dvp5/OHyM9EKOHPZXrNklylqgdbn4Hs1pEiwdKlqJ64c/Zbtzz0wS2WstzXLgKFjyw7gbWTL4yLlDV/MAreyY3YmUrcngSYTfz9FMMS05GTeZCC7Crv/WAKbADGBFCdFMEEqjv2c1wsrBt+AVDiotDEuLrW5Sbu9SPPVdA5upEDU3N1hGusTq/Ib8vyj3Jyr0m5RQrSWxS/3MJfFNwtbyJ7fUvVJyXGEi+uhQFd1CN1cmv3Fr+mq26G/CWw3j0QPJeI6SsCmBJo4SxDdisAAIZwzW1jDgANKNhHFvtd8tlzcRi/uTYXuDwa1gBnERwJNDQOJgTBfUQxIYxxWV6iCZs8YRKHpFmmPu1Fn227ICjlIRnwESSch8jv40J+dv0aRpI8uq2zNt4g26SXqwS+ldTnV/pv8VLdyXDJO06CEWYFN8tc7cv2QfT+BZmicwIH8knSvg9MwJHlWsuPBsT4pJRQ=
   file:
   # The names of the binaries to output, based on the -output template passed to gox.
-  - ice.windows.amd64.exe
   - ice.darwin.amd64
   - ice .linux.amd64
   on:
