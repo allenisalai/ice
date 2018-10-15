@@ -1,38 +1,28 @@
 language: go
 sudo: false
-language: go
-sudo: false
 matrix:
   include:
-    - go: 1.x
-      env: LATEST=true
-
+  - go: 1.x
+    env: LATEST=true
 before_install:
-  - go get github.com/mitchellh/gox
-
+- go get github.com/mitchellh/gox
 install:
-  - # skip
-
+- 
 script:
-  - go get -t -v ./...
-  - go test -v -race ./...
-  # Only build binaries from the latest Go release.
-  - if [ "${LATEST}" = "true" ]; then gox -os="linux darwin" -arch="amd64" -output="ice.." -verbose ./...; fi
-
-
+- go get -t -v ./...
+- go test -v -race ./...
+- if [ "${LATEST}" = "true" ]; then gox -os="linux darwin" -arch="amd64" -output="ice.."
+  -verbose ./...; fi
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: ap1G/h8Nwz3aOwoQvxIdNu0qxIJQpYxIUsO4GO6VLZCPT724E9yBQ32BTdud5WUz5NUBPNT7RJktl/K0FHoDw1QUl4+L4wUpN+WNuCrBVMBJpe5ppu8qVC46zABam34TZtqtu/6qsHsBAVu0P+NFEi7uN/znBRIfMLoC4pjttDefPk17gznF/T1FYpCq4S5/C+cmyglMOaZqTQ9liNw/dvp5/OHyM9EKOHPZXrNklylqgdbn4Hs1pEiwdKlqJ64c/Zbtzz0wS2WstzXLgKFjyw7gbWTL4yLlDV/MAreyY3YmUrcngSYTfz9FMMS05GTeZCC7Crv/WAKbADGBFCdFMEEqjv2c1wsrBt+AVDiotDEuLrW5Sbu9SPPVdA5upEDU3N1hGusTq/Ib8vyj3Jyr0m5RQrSWxS/3MJfFNwtbyJ7fUvVJyXGEi+uhQFd1CN1cmv3Fr+mq26G/CWw3j0QPJeI6SsCmBJo4SxDdisAAIZwzW1jDgANKNhHFvtd8tlzcRi/uTYXuDwa1gBnERwJNDQOJgTBfUQxIYxxWV6iCZs8YRKHpFmmPu1Fn227ICjlIRnwESSch8jv40J+dv0aRpI8uq2zNt4g26SXqwS+ldTnV/pv8VLdyXDJO06CEWYFN8tc7cv2QfT+BZmicwIH8knSvg9MwJHlWsuPBsT4pJRQ=
+    secure: DwQEWHC7qX9OXjnEHtOuSjXjL6z+8ipXPl3Angdhgh7o4VMY1VcxNs20DN7VtKZ72uzPX9tZsanaQa/fpH7B24MJXViJaFPmhzajNVyZjzHw5f+f1cbvqNeurDUS7L5mABBGc79kPPfouwwOXspxy69xlg5nhwWDHUpBFIZzep07rqqKTMzamqWCKDoHYDUXRnrQNBFhoUmgC6liOYtUDCZrP4wXtSAEh7kyfmN9z/GQUMh/r+V5n4FZVDzCHULJfMa10elLvx/Zg2h4enlbplBpop0C1DSQX/C8rz7ux5v1yMLghsMY6tlUZBcnXe8pj56clhGLDfxCpt261PSwXyUWkDA6BC6TeWyyJQ9q2siTib9bOVcwwxYiatcnMUasCjft3iF/k5c9gnKVzTfE+w8K1rKy72kKzPMIzeYvByGSURxmv/M13cF4vNhxinSh/jxO3Fw1mPj15KD5Y9KSC254ZFh8tz8Un5iCRvykHRuyxyvRZOe4ub/Y0Wrjb8HsWcR7LAYp8/Z90LP9Gg9zwlF048qkNTmgAeS2PsDHumyGinBhUi2wU07tImzKYop5L1iOFJDuebN62xQO63pDBfWBcctkfIDu0qItUm6Sk1fLq1zb32tOfZytX3hRkChtnSWGK4wbIga+DRbQHMT+ZwNBuAqDXPj36ZgJqI3JLFc=
   file:
-  # The names of the binaries to output, based on the -output template passed to gox.
   - ice.darwin.amd64
   - ice .linux.amd64
   on:
-    # What to repository to build
     repo: allenisalai/ice
-    # Only build binaries for tagged commits
     tags: true
-    condition: $LATEST = true
+    condition: "$LATEST = true"
 
