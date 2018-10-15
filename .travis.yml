@@ -11,7 +11,7 @@ install:
 script:
   - go get -t -v ./...
   - go test -v -race ./...
-  - if [ "${LATEST}" = "true" ]; then gox -os="linux darwin" -arch="amd64" -output="ice.." -verbose ./...; fi
+  - if [ "${LATEST}" = "true" ]; then gox -os="linux darwin" -arch="amd64" -output="ice.{{.OS}}.{{.Arch}}" -verbose ./...; fi
 deploy:
   provider: releases
   skip_cleanup: true
@@ -19,7 +19,7 @@ deploy:
     secure: OWYUy2Ny9dWTe1O8GGQi25Iebm8n2nUVwH7uUDJyb+7iy/p21Wb3Uyy3NFsfpvR8xHGcwS1M48eI4kP5uDfK/Dh6H+n5K8rK18KYukoKzUQA//R5bMEs0szgHv4Nb2SOyJ1E23PGWHhAuUBoFUtRQmnDwKUeX9kE0n4kV0sOVAUrYZzBpkaZYRIJL2MIlvQuLqFxyF7BVC9+IgSfT564f1ob9hDEs4pUJTIMi09G+xO9zMLqqXEzyb7d56ryZkb8g7kg5zqjutNVW8Biq8KSAWoIlWRmLxVtx6aS2/ZPJhlOIOjZHvWbDGtreHpMnp9d6tUa0dMQansb+JcBT5UlC3td2V5KNqjIFrzHnPjJEc5pfQQIKDIyNgr/75UuV3gBVuj0clGeY4N9Aw/U6/d/lGlHwWdg/QUZF5hui0ZWrQoimlAuAbDA0QhHxwtvL2I7t+7eY+zOO9LklY7gO2z0v9KVTaOeP4YkoGV3SaIw7aBghpkIy0NKt5jORSBaWGcw/+8Q4Ix+8jdC8wH6fXqVpcyVz3XNdiM/BueWQxUXNEoZrxyDDnQ//84rqeQCA0grtdati2lfEv1CFMg2IROhx0A9jTIbfCFd9n84e3w79pR/+Ge1hqLBk1/rGK79uGep54CEKHs08xj+smUzhiP8e+/0N5J0CzOlf5hFvhuiHAE=
   file:
     - ice.darwin.amd64
-    - ice.linux.amd64git config --global --list
+    - ice.linux.amd64
   on:
     repo: allenisalai/ice
     tags: true
