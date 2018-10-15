@@ -22,3 +22,4 @@ deploy:
     - ice.linux.amd64git config --global --list
   on:
     repo: allenisalai/ice
+    tags: true
